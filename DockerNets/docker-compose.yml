@@ -1,0 +1,30 @@
+services:
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    depends_on:
+    - sql
+
+  web:
+    image: ${DOCKER_REGISTRY-}web
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
+
+  sql:
+    image: 'mcr.microsoft.com/mssql/server'
+    container_name: sqldb
+    restart: always
+    ports:
+      - "1435:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Pa55w0rd2024
+
+  smtp:
+    image: rnwood/smtp4dev
+    restart: always
+    ports:
+      - "5010:80"
